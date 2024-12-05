@@ -10,7 +10,6 @@ import socket
 import time
 import struct
 import machine
-import yaml
 
 def connect_network(ssid, password):
     # Connect to network
@@ -46,12 +45,17 @@ def get_time(host='pool.ntp.org'):
         msg = s.recv(48)
     finally:
         s.close()
-    val = struct.unpack("!I", msg[40:44])[0]
-    t = val - NTP_DELTA    
-    tm = time.gmtime(t)
-    return tm
+    
+    secs = struct.unpack("!I", msg[40:44])[0]
+    frac = struct.unpack("!I", msg[44:48])[0]
+    secs = secs - NTP_DELTA
+    millisecs = int(frac * 1000 / 2**32)
+
+    return secs, millisecs
 
 if __name__ == "__main__":
+    import yaml
+
     # Use yaml to get wifi credentials
     with open("credentials.yaml", "r") as file:
         credentials = yaml.safe_load(file)
