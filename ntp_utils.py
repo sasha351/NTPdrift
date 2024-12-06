@@ -1,5 +1,6 @@
 """
-Returns the time from NTP server specified, taken and modified from aallan on GitHub
+Supplies functions that connect to WiFi network and get the 
+time from NTP server specified, taken and modified from aallan on GitHub
 
 Attribution:
 
@@ -19,10 +20,13 @@ def connect_network(ssid, password):
         ssid (str): Network name
         password (str): Network password
     """
+
+    # Initialize, activate, and connect to network
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
 
+    # Wait and check if connection has been established
     max_wait = 10
     while max_wait > 0:
         if wlan.status() < 0 or wlan.status() >= 3:
@@ -31,6 +35,7 @@ def connect_network(ssid, password):
         print('waiting for connection...')
         time.sleep(1)
 
+    # Raise an error upon failed connection or print IP
     if wlan.status() != 3:
         raise RuntimeError('network connection failed')
     else:
@@ -73,7 +78,7 @@ def get_time(host='pool.ntp.org'):
 if __name__ == "__main__":
     import yaml
 
-    # Use yaml to get wifi credentials
+    # Use YAML to get WiFi credentials
     with open("credentials.yaml", "r") as file:
         credentials = yaml.safe_load(file)
     
