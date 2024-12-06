@@ -38,5 +38,5 @@ After struggling, we decided to shift to finding drift through connecting throug
 - [Owen Raftery](https://github.com/realraft)
 - [Sasha Shikhanovich](https://github.com/sasha351)
 - [Thomas Murphy](https://github.com/thocmurphy)
-- Kyle Belanger
+- [Kyle Belanger](https://github.com/kfb-123)
 
