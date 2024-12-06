@@ -1,7 +1,7 @@
 
 # NTP Drift
 
-UMass Amherst - ECE 371 Honors project:
+### UMass Amherst - ECE 371 Honors project:
 
 Assignment given by Professor Taqi Raza and supervized by teaching assistant Shayan Nazeer
 
@@ -10,22 +10,18 @@ devices connected to internet sync their local clock with NTP server using NTP p
 
 ## Project Guide/Progression
 
-The board we chose to use was the Sixfab Pico LTE and all analysis was performed in micropython. 
+The board we chose to use was the Sixfab Pico LTE. Coding and analysis was performed in micropython.
 
-The intial setup was done following the documentation and startup guides on the SixFab Pico website. At start with the setup, we first wrote boardBlink.py to ensure that we were able to upload files properly. We reccomend using Thonny, an open-source python IDE, to interface with the Pico.
+The initial setup was done following the documentation and startup guides on the [Sixfab Pico website]([https://sixfab.com/product/sixfab-pico-lte/?aelia_cs_currency=USD&gad_source=1](https://docs.sixfab.com/docs/sixfab-pico-lte-introduction)). This included activating the SIM card with the network provider, installing the [Pico LTE SDK](https://github.com/sixfab/pico_lte_micropython-sdk), and installing [Thonny](https://thonny.org/), the recommended IDE for the board. We first wrote and ran boardBlink.py to ensure that setup was performed properly.
 
-To accomplish our first task of connecting the board to the internet, our group sent several sample HTTP requests utilizing the tool Webhook.site. 
-The tool allowed us to send GET, POST, and PUT requests to and from the board and allow us to view the responses in real time. 
-Once we verified that the signals were being property sent and received, we moved on to establishing the connection with the NTP server.
-The NTP server we chose was from NTP Pool Project, as it seems to be the most popular tool for NTP-related projects and experiments. Our approach to this
-was by using AT commands, a way of interfacting with IOT devices, to connect to the network. The code for this can be found in getNetworkTimeWithAT.py. We also noticed that upon powering up and connecting to LTE, the Pico automatically synchronized its time with the network.
+Our first deliverable was connecting the board to the internet. Our group used the built-in PicoLTE micropython module that came with the SDK and [webhook.site](webhook.site) to send HTTP GET, PUT, and POST requests from the board and confirm an internet connection. The Pico LTE documentation has multiple pages on how to accomplish this along with pre-written micropython scripts included in the SDK, these can also be found in the initialTesting folder. 
 
-{
-Owen rant about AT commands and how we weren't able to get the ms precision to work over the cellular network
-}
+Our second deliverable was to connect to an NTP server and sync the board’s time to it. In our research, we found that NTP servers require a UDP connection and that the PicoLTE module does not include functions that support such a protocol. Our way to circumvent this was to use AT commands, commands used to establish and configure a network connection, with the PicoLTE module and the send_at_comm() function. Examples of our AT command attempts can be found in the networkTesting folder. The first thing we noticed was that upon powering up the board, the Pico LTE automatically synchronized its time with the network. From there we found multiple AT commands that create and confirm a network connection as well pull the time from the board’s 4G network. See SyncTimeWithAT.py in the networkTesting folder for an example. 
 
-After running into those issues, we shifted to finding drift through connecting to a WiFi network instead of using LTE. Although the initial time still comes from
-the LTE connection that occurs at boot, the script [scriptName] manually sets the time over a WiFi connection instead (for the sake of consistency). Our initial findings 
+There was a problem with our AT command method. The network time is only given a precision of seconds and the time drift of the Pico LTE is too minor to be analysed in such a resolution. This led us to continue using AT commands in an attempt to create a UDP connection with an actual NTP server through the network. However, this is the point we got stuck. Regardless of forming connections with the network and ensuring their validity, forming a link with a NTP server or even creating a UDP socket led to errors.
+
+After struggling, we decided to shift to finding drift through connecting through WiFi instead of using the 4G network. We were able to find success utilizing home WiFi, we figured eduroam or other school networks would cause problems with the additional authentication but did not test this. Utilizing [code written by aallan](https://gist.github.com/aallan/581ecf4dc92cd53e3a415b7c33a1147c), the connection was swift and the NTP server returned the time with millisecond accuracy. We used this to perform our analysis on the board’s time drift.
+
 
 
 ## Results and Analysis
@@ -33,10 +29,12 @@ the LTE connection that occurs at boot, the script [scriptName] manually sets th
 ## Associated Links
 
 - [Sixfab Pico](https://sixfab.com/product/sixfab-pico-lte/?aelia_cs_currency=USD&gad_source=1)
-
+- [Sixfab Pico Documentation](https://docs.sixfab.com/docs/sixfab-pico-lte-introduction)
+- [Sixfab Pico LTE SDK/micropython module](https://github.com/sixfab/pico_lte_micropython-sdk)
+- [Thonny](https://thonny.org/)
 - [Webhooks](https://webhook.site/#!/view/668411be-19ef-49e1-85cf-9ccfb0d3f7c3)
-
 - [Pool NPT](https://www.ntppool.org/en/)
+
 ## Authors
 
 - [Owen Raftery](https://github.com/realraft)
