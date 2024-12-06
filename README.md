@@ -1,6 +1,6 @@
 # UMass Amherst - ECE 371 Honors Project:
 
-## Measring LTE Board Time Drift
+## Measuring LTE Board Time Drift
 
 Assignment given by Professor Taqi Raza and supervized by teaching assistant Shayan Nazeer
 
