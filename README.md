@@ -33,7 +33,7 @@ After struggling, we decided to shift to finding drift through connecting throug
 - [Sixfab Pico LTE SDK/micropython module](https://github.com/sixfab/pico_lte_micropython-sdk)
 - [Thonny](https://thonny.org/)
 - [Webhooks](https://webhook.site/#!/view/668411be-19ef-49e1-85cf-9ccfb0d3f7c3)
-- [Pool NPT](https://www.ntppool.org/en/)
+- [Pool NTP](https://www.ntppool.org/en/)
 
 ## Authors
 
