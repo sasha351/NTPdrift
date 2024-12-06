@@ -1,12 +1,10 @@
+# UMass Amherst - ECE 371 Honors Project:
 
-# NTP Drift
-
-### UMass Amherst - ECE 371 Honors project:
+## Measring LTE Board Time Drift
 
 Assignment given by Professor Taqi Raza and supervized by teaching assistant Shayan Nazeer
 
-Goal: Synchronize time of Sixfab Pico LTE with an NTP server. NTP is network time protocol and all
-devices connected to internet sync their local clock with NTP server using NTP protocol 
+Goal: Synchronize time of Sixfab Pico LTE with an NTP server and measure board time drift.
 
 ## Project Guide/Progression
 
