@@ -76,11 +76,11 @@ def get_time(host='pool.ntp.org'):
     return epoch, millisecs
 
 if __name__ == "__main__":
-    import yaml
+    import json
 
-    # Use YAML to get WiFi credentials
-    with open("credentials.yaml", "r") as file:
-        credentials = yaml.safe_load(file)
+    # Use JSON to get WiFi credentials
+    with open("credentials.json", "r") as file:
+        credentials = json.load(file)
     
     ssid = credentials["Wifi_Name"]
     password = credentials["Wifi_Password"]

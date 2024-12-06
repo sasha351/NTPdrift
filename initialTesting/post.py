@@ -1,5 +1,5 @@
 """
-POST Request with custom header, taken and modified from Sixfab Pico source code
+POST Request with custom header, taken from Sixfab Pico source code
 
 attribution:
 

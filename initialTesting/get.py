@@ -1,5 +1,5 @@
 """
-GET Request with custom header, taken and modified from Sixfab Pico source code
+GET Request with custom header, taken from Sixfab Pico source code
 
 attribution:
 

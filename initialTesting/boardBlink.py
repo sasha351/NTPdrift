@@ -1,4 +1,6 @@
-### First test file - powering on the board and getting the onboard LED to blink
+"""
+Blinks the Pico LTE's on board LED with 2.5 second frequency
+"""
 
 from machine import Pin, Timer
 

@@ -1,33 +1,41 @@
-from pico_lte.utils.atcom import ATCom
-from pico_lte.common import debug
-import machine
+"""
+Uses PicoLTE module and atcom.send_at_comm() function to send AT commands.
+Commands will connect board to network and then ask the 4G network itself for the time.
+This script does not sync the boards time, it just asks for the time and prints it.
+"""
+from pico_lte.core import PicoLTE
 import time
+import json
 
-def print_sys_time(rtc):
-    current_time = rtc.datetime()
-    formatted_time = "{}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}".format(
-        current_time[0],  # Year
-        current_time[1],  # Month
-        current_time[2],  # Day
-        current_time[3],  # Hour
-        current_time[4],  # Minute
-        current_time[5]   # Second
-    )
+with open("credentials.json", "r") as file:
+    credentials = json.load(file)
 
-    print(formatted_time)
-    return
+apn = credentials["APN"]
 
-rtc = machine.RTC()
+picoLTE = PicoLTE()
 
-print_sys_time(rtc)
+AT_commands = ["AT+CFUN=1", "AT+CGATT=1", f'AT+CGDCONT=1,"IP","{apn}"', "AT+CCLK?"]
 
-#debug.set_level(0)
-atcom = ATCom()
-time.sleep(5)
-commands = ["AT+CMEE=1", "AT+CREG?", "AT+CSQ", "AT+CCLK?"]
+"""
+AT+CFUN=1:
+Enables full functionality of the modem, allows for network connection
 
-for comm in commands:
-    res = atcom.send_at_comm(comm)
+AT+CGATT=1:
+Attatched the device to the packet-switched service of the network.
+Needed for data communication (data recieving and transmitting)
+
+AT+CGDCONT=1,"IP","APN":
+Configures the packet data protocol context for the modem.
+1 -> identifies the session
+IP -> specifies the type of connection
+super -> APN, access point name for the network
+
+AT+CCLK?:
+Asks the network for the time
+"""
+
+for comm in AT_commands:
+    res = picoLTE.atcom.send_at_comm(comm)
     print(res)
-    
-print_sys_time(rtc)
+    time.sleep(1)
+

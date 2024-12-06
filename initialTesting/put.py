@@ -1,5 +1,5 @@
 """
-PUT Request, taken and modified from Sixfab Pico source code
+PUT Request, taken from Sixfab Pico source code
 
 attribution:
 
