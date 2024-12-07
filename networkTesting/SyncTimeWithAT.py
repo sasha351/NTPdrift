@@ -1,11 +1,12 @@
 """
 Uses PicoLTE module and atcom.send_at_comm() function to send AT commands.
-Commands will connect board to network and then ask the 4G network itself for the time.
-This script does not sync the boards time, it just asks for the time and prints it.
+Commands will connect board to network and then ask the 4G network for the time
+and then sync.
 """
 from pico_lte.core import PicoLTE
 import time
 import json
+import machine
 
 with open("credentials.json", "r") as file:
     credentials = json.load(file)
@@ -39,3 +40,21 @@ for comm in AT_commands:
     print(res)
     time.sleep(1)
 
+# Sync Pico LTE board time
+time_str = res['response'][0].split('"')[1] # Extract time string between quotes
+
+date_part, time_part = time_str.split(',') # Split into date and time parts
+
+yy, mm, dd = map(int, date_part.split('/')) # Parse date (YY/MM/DD)
+
+# Parse time (HH:MM:SS)
+time_only = time_part.split('-')[0]  # Remove part after -
+HH, MM, SS = map(int, time_only.split(':'))
+
+year = 2000 + yy # Convert 2-digit year to 4-digit
+
+# Set RTC (year, month, day, weekday, hours, minutes, seconds, subseconds)
+rtc = machine.RTC()
+rtc.datetime((year, mm, dd, 0, HH, MM, SS, 0))
+
+print(time.localtime()) # Print board time

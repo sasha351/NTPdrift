@@ -1,6 +1,6 @@
 # UMass Amherst - ECE 371 Honors Project:
 
-## Measring LTE Board Time Drift
+## Measuring LTE Board Time Drift
 
 Assignment given by Professor Taqi Raza and supervized by teaching assistant Shayan Nazeer
 
@@ -29,8 +29,8 @@ After struggling, we decided to shift to finding drift through connecting throug
 - [Sixfab Pico](https://sixfab.com/product/sixfab-pico-lte/?aelia_cs_currency=USD&gad_source=1)
 - [Sixfab Pico Documentation](https://docs.sixfab.com/docs/sixfab-pico-lte-introduction)
 - [Sixfab Pico LTE SDK/micropython module](https://github.com/sixfab/pico_lte_micropython-sdk)
-- [Thonny](https://thonny.org/)
-- [Webhooks](https://webhook.site/#!/view/668411be-19ef-49e1-85cf-9ccfb0d3f7c3)
+- [Thonny IDE](https://thonny.org/)
+- [webhook.site](https://webhook.site/#!/view/668411be-19ef-49e1-85cf-9ccfb0d3f7c3)
 - [Pool NTP](https://www.ntppool.org/en/)
 
 ## Authors
@@ -38,5 +38,5 @@ After struggling, we decided to shift to finding drift through connecting throug
 - [Owen Raftery](https://github.com/realraft)
 - [Sasha Shikhanovich](https://github.com/sasha351)
 - [Thomas Murphy](https://github.com/thocmurphy)
-- Kyle Belanger
+- [Kyle Belanger](https://github.com/kfb-123)
 
