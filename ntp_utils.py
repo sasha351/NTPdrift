@@ -12,6 +12,8 @@ import time
 import struct
 import machine
 
+NTP_DELTA = 2208988800
+
 def connect_network(ssid, password):
     """
     Connects to a WiFi network using provided credentials
@@ -43,12 +45,12 @@ def connect_network(ssid, password):
         status = wlan.ifconfig()
         print( 'ip = ' + status[0] )
 
-def get_time(host='pool.ntp.org'):
+def get_time(host):
     """
     Retrieves current time from an NTP server
     
     Args:
-        host (str): NTP server hostname, defaults to pool.ntp.org
+        host (str): NTP server hostname
     
     Returns:
         tuple: First index is epoch time, second index is milliseconds timestamp
@@ -69,11 +71,37 @@ def get_time(host='pool.ntp.org'):
         s.close()
     
     epoch = struct.unpack("!I", msg[40:44])[0] # Extract epoch time from NTP response
+    epoch -= NTP_DELTA
 
     frac = struct.unpack("!I", msg[44:48])[0] # Extract fractional time from NTP response
     millisecs = int(frac * 1000 / 2**32) # Convert fractional time to milliseconds
 
     return epoch, millisecs
+
+def set_time(host):
+    """
+    Retrieves the board's time to NTP server time
+    
+    Args:
+        host (str): NTP server hostname
+    
+    Returns:
+        Nothing
+    """
+    NTP_QUERY = bytearray(48)
+    NTP_QUERY[0] = 0x1B
+    addr = socket.getaddrinfo(host, 123)[0][-1]
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.settimeout(1)
+        res = s.sendto(NTP_QUERY, addr)
+        msg = s.recv(48)
+    finally:
+        s.close()
+    val = struct.unpack("!I", msg[40:44])[0]
+    t = val - NTP_DELTA    
+    tm = time.gmtime(t)
+    machine.RTC().datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3] - 5, tm[4], tm[5], 0))
 
 if __name__ == "__main__":
     import json
