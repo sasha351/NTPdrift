@@ -8,7 +8,7 @@ Notes:
 - return network connection from utils and add checking for network connection to see if its still active
 """
 # NTP_DELTA necessary for time adjustment
-NTP_DELTA = 1751529000
+NTP_DELTA = 1751586000  # changes depending on the server
 MINUTES = 5
 WAIT_PERIOD = MINUTES * 60
 
