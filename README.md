@@ -8,9 +8,9 @@ Goal: Synchronize time of Sixfab Pico LTE with an NTP server and measure board t
 
 ## Project Guide/Progression
 
-The board we chose to use was the Sixfab Pico LTE. Coding and analysis was performed in micropython.
+The board we chose to use was the [Sixfab Pico LTE](https://sixfab.com/product/sixfab-pico-lte/?aelia_cs_currency=USD&gad_source=1). Coding and analysis was performed in micropython.
 
-The initial setup was done following the documentation and startup guides on the [Sixfab Pico website]([https://sixfab.com/product/sixfab-pico-lte/?aelia_cs_currency=USD&gad_source=1](https://docs.sixfab.com/docs/sixfab-pico-lte-introduction)). This included activating the SIM card with the network provider, installing the [Pico LTE SDK](https://github.com/sixfab/pico_lte_micropython-sdk), and installing [Thonny](https://thonny.org/), the recommended IDE for the board. We first wrote and ran boardBlink.py to ensure that setup was performed properly.
+The initial setup was done following the [documentation and startup guides on the Sixfab Pico website](https://docs.sixfab.com/docs/sixfab-pico-lte-introduction). This included activating the SIM card with the network provider, installing the [Pico LTE SDK](https://github.com/sixfab/pico_lte_micropython-sdk), and installing [Thonny](https://thonny.org/), the recommended IDE for the board. We first wrote and ran boardBlink.py to ensure that setup was performed properly.
 
 Our first deliverable was connecting the board to the internet. Our group used the built-in PicoLTE micropython module that came with the SDK and [webhook.site](webhook.site) to send HTTP GET, PUT, and POST requests from the board and confirm an internet connection. The Pico LTE documentation has multiple pages on how to accomplish this along with pre-written micropython scripts included in the SDK, these can also be found in the initialTesting folder. 
 
