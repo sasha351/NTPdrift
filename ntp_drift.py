@@ -1,3 +1,8 @@
+"""
+Utilizes ntp_utils module to connect to network, set board time, measure drift over WAIT_PERIOD intervals.
+Outputs board ms time, ntp server ms time, and difference/drift to time_drift.csv.
+Use keyboard interrupt to stop script
+"""
 import ntp_utils
 import json
 import machine
