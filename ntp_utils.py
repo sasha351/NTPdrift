@@ -29,21 +29,19 @@ def connect_network(ssid, password):
     wlan.connect(ssid, password)
 
     # Wait and check if connection has been established
-    max_wait = 10
-    while max_wait > 0:
+    print("Waiting for connection.", end="")
+    for i in range(10):
         if wlan.status() < 0 or wlan.status() >= 3:
             break
-        max_wait -= 1
-        print('waiting for connection...')
+        print('.', end="")
         time.sleep(1)
 
     # Raise an error upon failed connection or print IP
     if wlan.status() != 3:
-        raise RuntimeError('network connection failed')
+        raise RuntimeError('\nNetwork connection failed.\n')
     else:
-        print('connected')
         status = wlan.ifconfig()
-        print( 'ip = ' + status[0] )
+        print(f'\nConnected!\nIP = {status[0]}')
 
 def get_time(host):
     """
@@ -80,7 +78,7 @@ def get_time(host):
 
 def set_time(host):
     """
-    Retrieves the board's time to NTP server time
+    Retrieves the NTP server time and sets the board's time
     
     Args:
         host (str): NTP server hostname
@@ -88,20 +86,11 @@ def set_time(host):
     Returns:
         Nothing
     """
-    NTP_QUERY = bytearray(48)
-    NTP_QUERY[0] = 0x1B
-    addr = socket.getaddrinfo(host, 123)[0][-1]
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.settimeout(1)
-        res = s.sendto(NTP_QUERY, addr)
-        msg = s.recv(48)
-    finally:
-        s.close()
-    val = struct.unpack("!I", msg[40:44])[0]
-    t = val - NTP_DELTA    
-    tm = time.gmtime(t)
-    machine.RTC().datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3] - 5, tm[4], tm[5], 0))
+    sec, ms = get_time(host) # Get time from NTP server
+
+    # Set board's time
+    tm = time.gmtime(sec)
+    machine.RTC().datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
 
 if __name__ == "__main__":
     import json
@@ -112,7 +101,8 @@ if __name__ == "__main__":
     
     ssid = credentials["Wifi_Name"]
     password = credentials["Wifi_Password"]
+    host = credentials["NTP_Host"]
 
     connect_network(ssid, password)
-    tm = get_time()
+    tm = get_time(host)
     print(tm)

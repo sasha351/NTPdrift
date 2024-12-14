@@ -3,12 +3,6 @@ import json
 import machine
 import time
 
-"""
-Notes:
-- return network connection from utils and add checking for network connection to see if its still active
-"""
-# NTP_DELTA necessary for time adjustment
-NTP_DELTA = 1751586000  # changes depending on the server
 MINUTES = 5
 WAIT_PERIOD = MINUTES * 60
 
@@ -26,53 +20,47 @@ host = credentials["NTP_Host"]
 ntp_utils.connect_network(ssid, password)
 
 # Create text file with headers
-with open('time_drift.txt', 'w') as file:
+with open('time_drift.csv', 'w') as file:
     file.write("Board_Time, NTP_Time, Difference\n")
 
 # Set the time of the board
-set_time = 10   # number of tries to set the time
-while set_time > 0:
+print("Attempting to set board's time.", end="")
+for i in range(10):
     try:
         ntp_utils.set_time(host)
         break
     except:
-        set_time -= 1
         time.sleep(1)
-        print('trying to set time...')
+        print(".", end="")
 
 # Verify the time was set
 current_time = rtc.datetime()
-print(f"Board time set to: {current_time}")
+print(f"\nBoard time set to: {current_time}\n")
 
 # Start monitoring loop
 try:
     while True:
-        # Get board and NTP time
         # Try to get time from the server, if there is an error then restart the loop
         try:
-            ntp_time_s, ntp_time_ms = ntp_utils.get_time(host)
+            ntp_s, ntp_ms = ntp_utils.get_time(host) # Get time from NTP server
+            board_time = time.time_ns() // 10**6 # Get time from board
+
+            ntp_ms = ntp_ms + (ntp_s * 1000) # Convert time to milliseconds
+
+            diff_ms = abs(board_time - ntp_ms) # Find time difference in milliseconds
+            
+            output_line = "%s, %s, %s\n"%(board_time, ntp_ms, diff_ms) # Format output line
+            
+            # Write to text file
+            with open('time_drift.csv', 'a') as file:
+                file.write(output_line)
+            
+            print(output_line)
         except:
-            continue
-        board_time = time.time_ns() // 10**6    # get time in milliseconds
-
-        # Format NTP time
-        ntp_time_ms = ntp_time_s + (ntp_time_s * 1000) # convert time to milliseconds
-
-        # Find the difference between times
-        diff_ms = abs(board_time - ntp_time_ms) # time difference in milliseconds
-        diff_ms = abs(diff_ms - NTP_DELTA) # adjust time difference
-        
-        # Format output line
-        output_line = "%s, %s, %s\n"%(board_time, ntp_time_ms, diff_ms)
-        
-        # Write to text file
-        with open('time_drift.txt', 'a') as file:
-            file.write(output_line)
-        
-        print(output_line)
+            print("Error in monitoring loop.\n")
             
         # Wait for specified period
         time.sleep(WAIT_PERIOD)
         
-except KeyboardInterrupt:
+except (KeyboardInterrupt, SystemExit, Exception):
     print("\nMonitoring stopped")
