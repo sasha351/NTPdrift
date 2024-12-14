@@ -12,7 +12,7 @@ import time
 import struct
 import machine
 
-NTP_DELTA = 2208988800
+NTP_DELTA = 2208988800 # used with epoch time to get actual time
 
 def connect_network(ssid, password):
     """
@@ -65,8 +65,11 @@ def get_time(host):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         s.settimeout(1)
+
+        start_time = time.ticks_ms()
         res = s.sendto(NTP_QUERY, addr)
         msg = s.recv(48)
+
     finally:
         s.close()
     
@@ -74,13 +77,14 @@ def get_time(host):
     epoch -= NTP_DELTA
 
     frac = struct.unpack("!I", msg[44:48])[0] # Extract fractional time from NTP response
+    end_time = time.ticks_ms()
     millisecs = int(frac * 1000 / 2**32) # Convert fractional time to milliseconds
 
-    return epoch, millisecs
+    return epoch, millisecs + time.ticks_diff(end_time, start_time)
 
 def set_time(host):
     """
-    Retrieves the board's time to NTP server time
+    Retrieves NTP server time and sets board time
     
     Args:
         host (str): NTP server hostname
@@ -88,20 +92,20 @@ def set_time(host):
     Returns:
         Nothing
     """
-    NTP_QUERY = bytearray(48)
-    NTP_QUERY[0] = 0x1B
-    addr = socket.getaddrinfo(host, 123)[0][-1]
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.settimeout(1)
-        res = s.sendto(NTP_QUERY, addr)
-        msg = s.recv(48)
-    finally:
-        s.close()
-    val = struct.unpack("!I", msg[40:44])[0]
-    t = val - NTP_DELTA    
-    tm = time.gmtime(t)
-    machine.RTC().datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3] - 5, tm[4], tm[5], 0))
+    secs, millisecs= get_time(host) # Get time from NTP server
+
+    # Set board time with milliseconds accounted for
+    tm = time.gmtime(secs + millisecs // 1000) # add seconds to account for rolling to next largest second
+    machine.RTC().datetime((
+        tm[0],       # Year
+        tm[1],       # Month
+        tm[2],       # Day
+        tm[6] + 1,   # Weekday (convert 0-6 to 1-7)
+        tm[3],       # Hours
+        tm[4],       # Minutes
+        tm[5],       # Seconds
+        0            # Subseconds (Not sure what this is, but it isn't milliseconds)
+    ))
 
 if __name__ == "__main__":
     import json
@@ -112,7 +116,8 @@ if __name__ == "__main__":
     
     ssid = credentials["Wifi_Name"]
     password = credentials["Wifi_Password"]
+    host = credentials["NTP_Host"]
 
     connect_network(ssid, password)
-    tm = get_time()
+    tm = get_time(host)
     print(tm)
