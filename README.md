@@ -20,7 +20,7 @@ There was a problem with our AT command method. The network time is only given a
 
 After struggling, we decided to shift to finding drift through connecting through WiFi instead of using the 4G network. We were able to find success utilizing home WiFi, we figured eduroam or other school networks would cause problems with the additional authentication but did not test this. Utilizing [code written by aallan](https://gist.github.com/aallan/581ecf4dc92cd53e3a415b7c33a1147c), the connection was swift and the NTP server returned the time with millisecond accuracy. We used this to perform our analysis on the board’s time drift.
 
-
+We wrote [ntp_utils.py](https://github.com/sasha351/NTPdrift/blob/main/ntp_utils.py) to take advantage of aallan's code and also write our own functions to get the time from the NTP server and set the board's time with it. Next, we wrote [ntp_drift.py](https://github.com/sasha351/NTPdrift/blob/main/ntp_drift.py), which uses ntp_utils.py to connect to the network, set the board's time, and then runs in an infinite loop calculating the drift over 5 minute intervals and outputting to a csv file. You can view some of our data from different NTP servers in the repo.
 
 ## Results and Analysis
 
