@@ -24,7 +24,19 @@ We wrote [ntp_utils.py](https://github.com/sasha351/NTPdrift/blob/main/ntp_utils
 
 ## Results and Analysis
 
-After running ntp_utils.py twice for two difference NTP servers (each run lasting a little more than 14 hours), a significant drift of about 51 seconds was observed on each server. The drift appears accumulate linearly as time progresses, as seen in [pool_ntp_org.png](https://github.com/sasha351/NTPdrift/blob/main/pool_ntp_org.png) and [time1_google_com.png](https://github.com/sasha351/NTPdrift/blob/main/time1_google_com.png). These graphs were plotted from the data in [test1_raw.txt](https://github.com/sasha351/NTPdrift/blob/main/test1_raw.txt) and [test2_raw.txt](https://github.com/sasha351/NTPdrift/blob/main/test2_raw.txt), respectively.
+After running ntp_utils.py twice for two difference NTP servers (each run lasting a little more than 14 hours), a significant drift of about 51 seconds was observed on each server. The drift appears accumulate linearly as time progresses, as seen in [pool_ntp_org.png](https://github.com/sasha351/NTPdrift/blob/main/pool_ntp_org.png):
+
+<p align="center">
+  <img src="pool_ntp_org.png" />
+</p>
+
+and [time1_google_com.png](https://github.com/sasha351/NTPdrift/blob/main/time1_google_com.png):
+
+<p align="center">
+  <img src="time1_google_com.png" />
+</p>
+
+These graphs were plotted from the data in [test1_raw.txt](https://github.com/sasha351/NTPdrift/blob/main/test1_raw.txt) and [test2_raw.txt](https://github.com/sasha351/NTPdrift/blob/main/test2_raw.txt), respectively.
 
 ## Associated Links
 
@@ -41,4 +53,3 @@ After running ntp_utils.py twice for two difference NTP servers (each run lastin
 - [Sasha Shikhanovich](https://github.com/sasha351)
 - [Thomas Murphy](https://github.com/thocmurphy)
 - [Kyle Belanger](https://github.com/kfb-123)
-
